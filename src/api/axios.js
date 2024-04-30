@@ -53,7 +53,8 @@ const UpdateCustomer = async (
   customerRegistryDateLong
 ) => {
   try {
-    const response = await axiosInstance.put(`/Customer/UpdateCustomer/${customerId}`, {
+    const response = await axiosInstance.post(`/Customer/UpdateCustomer`, {
+      customerId,
       customerName,
       customerSurname,
       customerIdentityNumber,
@@ -89,7 +90,7 @@ const getCustomerById = async (customerId) => {
 
 const deleteCustomer = async (customerId) => {
   try {
-    const response = await axiosInstance.delete('/Customer/DeleteCustomer/', { customerId});
+    const response = await axiosInstance.post('/Customer/DeleteCustomer/', { customerId});
     return response.data;
   } catch (error) {
     throw new Error('Customer Deleting is failed. Please try again.');
