@@ -36,8 +36,6 @@ const App = () => {
 
       <Route path="/" element={isLoggedIn ? <HomePage /> : <Login />} />
       {/* // <Navbar /> } */}
-      {/* <Kayit/> */}
-      {/* <Images/> */}
        <Route path="/Kayit" element={<Kayit/>}/>
       {/* <Route path="/Program" element={<Program />} /> */}
      {/* <Route path="/Üye-Bul" element={<Search />} />  */}
