@@ -20,7 +20,6 @@ import { loginFailure } from '../../actions/authActions';
 import { loginRequest } from '../../api/axios';
 import Swal from 'sweetalert2'
 import { useNavigate } from 'react-router-dom';
-import { alignProperty } from "@mui/material/styles/cssUtils";
 
 
 
@@ -118,9 +117,9 @@ const Forms = () => {
 <ThemeProvider theme={defaultTheme}>
       <CDBContainer
         style={{
-          width: "40%",
-          marginTop: "6rem",
-          marginLeft: "30%",
+          width: "50%",
+          marginTop: "5rem",
+          marginLeft: "25%",
           background: "black",
           boxShadow: "0px -1px 5px black",
           color: "#e7c818"

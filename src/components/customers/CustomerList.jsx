@@ -127,7 +127,6 @@ const Customers = () => {
     try {
       const response = await deleteCustomer(customerId);
       if (response.status !== "Error") {
-        // Silme işlemi başarılı olduysa, state'i güncellemek için bir eylem gönderin
         dispatch({ type: 'deleteCustomer', payload: customerId });
         setDispatched(true);
       } else {
@@ -144,7 +143,7 @@ const Customers = () => {
       <TableContainer style={{
       width: "80%",
       marginTop: "-11rem",
-      marginLeft: "28%", borderRadius:'1rem 1rem 0rem 0rem'}}>
+      marginLeft: "20%", borderRadius:'1rem 1rem 0rem 0rem'}}>
         
         
         
@@ -157,7 +156,10 @@ const Customers = () => {
             <StyledTableCell align="center">Telefon Numarası</StyledTableCell>
             <StyledTableCell align="center">Email Adresi</StyledTableCell>
             <StyledTableCell align="center">TC Kimlik Numarası</StyledTableCell>
-            <StyledTableCell align="center">Aidat Tutarı (₺)</StyledTableCell>
+            {/* <StyledTableCell align="center">Aidat Tutarı (₺)</StyledTableCell> */}
+            
+            <StyledTableCell align="center">Program</StyledTableCell>
+            
             <StyledTableCell align="center">İşlem</StyledTableCell>
           </TableRow>
         </TableHead>
@@ -170,13 +172,27 @@ const Customers = () => {
              {newsItem.customerName} {newsItem.customerSurname}
               </StyledTableCell>
                   
-              <StyledTableCell align="right">{newsItem.customerPhoneNumber}</StyledTableCell>
+              <StyledTableCell align="center">{newsItem.customerPhoneNumber}</StyledTableCell>
 
-              <StyledTableCell align="right">{newsItem.customerEmail}</StyledTableCell>
+              <StyledTableCell align="center">{newsItem.customerEmail}</StyledTableCell>
 
-              <StyledTableCell align="right">{newsItem.customerIdentityNumber}</StyledTableCell>
+              <StyledTableCell align="center">{newsItem.customerIdentityNumber}</StyledTableCell>
 
-              <StyledTableCell align="right">{newsItem.customerRegistryDateLong}</StyledTableCell>
+
+              <StyledTableCell align="center" color="black">
+              <CDBBtn style={{marginTop:"0.3em"}}
+         size="medium"
+         color="dark"  
+            >
+                <Link to="/CustomerProgram/" align="">
+                Program Düzenle
+              </Link>
+              </CDBBtn>
+              </StyledTableCell>
+
+              
+
+              {/* <StyledTableCell align="center">{newsItem.customerRegistryDateLong}</StyledTableCell> */}
                     
                   
                   

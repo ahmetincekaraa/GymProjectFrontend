@@ -9,7 +9,8 @@ import {
   CDBSidebarFooter,
 } from "cdbreact";
 // import Program from '../program/Program.jsx';
-import CustomerList from '../customers/CustomerList'
+import CustomerList from '../customers/CustomerList';
+import Program from '../program/CustomerProgram'
 import Kayit from '../kayit/Kayit'
 import { Routes, Route, Link } from "react-router-dom";
 
@@ -34,6 +35,7 @@ const Navbar = () => {
                 Üye Listesi
               </CDBSidebarMenuItem>
             </Link>
+
 
             {/* <Link to="/Üye-Bul">
               <CDBSidebarMenuItem icon="fa fa-search">
