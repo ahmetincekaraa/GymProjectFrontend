@@ -10,7 +10,7 @@ import {
 } from "cdbreact";
 // import Program from '../program/Program.jsx';
 import CustomerList from '../customers/CustomerList';
-import Program from '../program/CustomerProgram'
+import Program from '../customerProgram/CustomerProgram'
 import Kayit from '../kayit/Kayit'
 import { Routes, Route, Link } from "react-router-dom";
 

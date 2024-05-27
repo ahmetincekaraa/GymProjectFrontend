@@ -94,11 +94,25 @@ const CustomerUpdate = () => {
         updatedCustomerRegistryDateLong
       );
       setUpdateMessage('Müşteri bilgileri başarıyla güncellendi.');
-      // Güncelleme işlemi başarılı olduğunda, geçmişi yenile
-      navigate.goBack(); // history kullanarak geri git
+      // Başarı durumunda kullanıcıya bildirim gösterilir
+      Swal.fire({
+        position: "center",
+        icon: "success",
+        title: "Müşteri bilgileri başarıyla güncellendi.",
+        showConfirmButton: false,
+        timer: 1500,
+      });
     } catch (error) {
       console.error("Güncelleme başarısız:", error);
       setUpdateMessage('Müşteri bilgileri güncellenirken bir hata oluştu.');
+      // Hata durumunda kullanıcıya bildirim gösterilir
+      Swal.fire({
+        position: "center",
+        icon: "error",
+        title: "Müşteri bilgileri güncellenirken bir hata oluştu.",
+        showConfirmButton: false,
+        timer: 1500,
+      });
     }
   };
 

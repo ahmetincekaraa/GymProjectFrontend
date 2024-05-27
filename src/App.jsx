@@ -14,7 +14,7 @@ import { useDispatch } from 'react-redux';
 import { loginSuccess, logout } from "./actions/authActions";
 import HomePage from "./components/homePage/homePage";
 import CustomerUpdate from "./components/customerUpdate/CustomerUpdate";
-import CustomerProgram from "./components/program/CustomerProgram"
+import CustomerProgram from "./components/customerProgram/CustomerProgram"
 
 const App = () => {
   const isLoggedIn = useSelector(state => state.auth.isLoggedIn);
@@ -46,7 +46,7 @@ const App = () => {
         justifyContent:"center",
       }} path="/CustomerList"  element={<CustomerList />} /> 
       <Route path="/customer-update/:customerId" element={<CustomerUpdate />} /> 
-      <Route path="/" element={<CustomerProgram />} />
+      <Route path="/customer-program/:customerId" element={<CustomerProgram />} />
       </Routes>
     </div>
   );

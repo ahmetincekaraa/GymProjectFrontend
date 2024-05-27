@@ -27,6 +27,7 @@ import Paper from '@mui/material/Paper';
 import { CDBBtn, CDBContainer } from "cdbreact";
 import { Router, Route, Link } from 'react-router-dom';
 
+import Swal from "sweetalert2";
 
 
 
@@ -106,6 +107,10 @@ const Customers = () => {
   const handleUpdateClick = (customerId) => {
     navigate(`/customer-update/${customerId}`); // Düzenleme sayfasına yönlendirme
   };
+
+  const handleUpdateClick2 = (customerId) => {
+    navigate(`/customer-program/${customerId}`); // Düzenleme sayfasına yönlendirme
+  };
   
 
   // const handleUpdateClick =  async (prop) => {
@@ -124,17 +129,44 @@ const Customers = () => {
   //   });
   // };
   const handleDeleteClick = async (customerId) => {
-    try {
-      const response = await deleteCustomer(customerId);
-      if (response.status !== "Error") {
-        dispatch({ type: 'deleteCustomer', payload: customerId });
-        setDispatched(true);
-      } else {
-        console.error("Müşteri silme hatası:", response.message);
+    // Silme işleminden önce kullanıcıya bir onay mesajı göster
+    Swal.fire({
+      title: "Üye silinsin mi?",
+      text: "",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Evet, sil!",
+      cancelButtonText: "İptal",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // Kullanıcı onayladıysa silme işlemi gerçekleştir
+        deleteCustomer(customerId)
+          .then((response) => {
+            if (response.status !== "Error") {
+              // Silme işlemi başarılı olduysa state'i güncelle
+              dispatch({ type: "deleteCustomer", payload: customerId });
+              setDispatched(true);
+              Swal.fire(
+                "Silme işlemi tamamlandı.",
+                "",
+                "success"
+              );
+            } else {
+              Swal.fire("Hata!", response.message, "error");
+            }
+          })
+          .catch((error) => {
+            console.error("Müşteri silme hatası:", error);
+            Swal.fire(
+              "Hata!",
+              "Müşteri silinirken bir hata oluştu.",
+              "error"
+            );
+          });
       }
-    } catch (error) {
-      console.error("Müşteri silme hatası:", error);
-    }
+    });
   };
 
   return (
@@ -182,11 +214,11 @@ const Customers = () => {
               <StyledTableCell align="center" color="black">
               <CDBBtn style={{marginTop:"0.3em"}}
          size="medium"
-         color="dark"  
-            >
-                <Link to="/CustomerProgram/" align="">
-                Program Düzenle
-              </Link>
+         color="dark" 
+         onClick={() => {
+          handleUpdateClick2(newsItem.customerId);
+        }}
+            >                Program Düzenle
               </CDBBtn>
               </StyledTableCell>
 
