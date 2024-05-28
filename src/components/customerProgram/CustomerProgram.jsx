@@ -1,331 +1,227 @@
+
+import Navbar from "../nav/Navbar"
+
 import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from 'react-router-dom'; // useHistory ekledim
-import { getCustomerById, UpdateCustomer } from '../../api/axios';
-import Navbar from "../nav/Navbar";
+import { useSelector } from "react-redux";
+
+import { getAllCustomers,getCustomerById, deleteCustomer } from '../../api/axios'
+
+import { useDispatch } from 'react-redux';
+
 import {
-  TextField,
   Button,
-  Container,
-  Typography,
-  Box,
-  TextareaAutosize,
 } from "@mui/material";
-import { CDBInput, CDBCard, CDBCardBody, CDBBtn, CDBContainer, CDBSelect } from "cdbreact";
-import { Formik, Form, Field } from "formik";
-import CssBaseline from "@mui/material/CssBaseline";
-import { useDispatch } from "react-redux";
+
+
+import { useNavigate, } from 'react-router-dom';
+
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
+
+import { styled } from '@mui/material/styles';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell, { tableCellClasses } from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
+import { CDBBtn, CDBContainer } from "cdbreact";
+import { Router, Route, Link } from 'react-router-dom';
+
 import Swal from "sweetalert2";
 
 
-const CustomerUpdate = () => {
+
+const StyledTableCell = styled(TableCell)(({ theme }) => ({
+  [`&.${tableCellClasses.head}`]: {
+    backgroundColor: theme.palette.common.black,
+    color: '#e7c818'
+  },
+  [`&.${tableCellClasses.body}`]: {
+    fontSize: 14,
+  },
+}));
+
+const StyledTableRow = styled(TableRow)(({ theme }) => ({
+  '&:nth-of-type(odd)': {
+    backgroundColor: theme.palette.action.hover,
+  },
+  // hide last border
+  '&:last-child td, &:last-child th': {
+    border: 0,
+  },
+}));
+
+function createData(area, movement, set, number) {
+  return { area, movement, set, number};
+}
+
+const rows = [
+  createData('GÖĞÜS ', 159, 6.0, 24, 4.0),
+  createData('ÖN KOL', 237, 9.0, 37, 4.3),
+  createData('ARKA KOL', 237, 9.0, 37, 4.3),
+  createData('SIRT', 237, 9.0, 37, 4.3),
+  createData('OMUZ', 237, 9.0, 37, 4.3),
+  createData('BACAK', 237, 9.0, 37, 4.3),
+  createData('KARIN', 237, 9.0, 37, 4.3),
+];
+
+
+const CustomerProgram = () => {
   const dispatch = useDispatch();
-  const [updateData, setUpdateData] = useState(true); // useState ekledim
+  const navigate = useNavigate();
+  const [dispatched, setDispatched] = useState(false);
 
-  const handleSubmit = (values) => {
-    console.log("Veriler:", values);
-    const customerId = updateData.customerId;
-    const requestFunction = updateData.UpdateCustomer;
 
-    requestFunction(values.name, values.surname, values.identityNumber, values.phoneNumber, values.email, values.registryDateLong)
-      .then((data) => {
-        if (data?.status === "Error") {
-          Swal.fire({
-            position: "center",
-            title: data.errorMessage,
-            showConfirmButton: false,
-            timer: 1500,
-          });
-        } else {
-          Swal.fire({
-            position: "center",
-            icon: "success",
-            title: updateData ? "Üye Güncellendi" : "Üye Eklendi",
-            showConfirmButton: true,
-          }).then((result) => {
-            dispatch(false);
-            if (result.isConfirmed) {
-              dispatch(null);
+  const handleDeleteClick = async (customerId) => {
+    Swal.fire({
+      title: "Üye silinsin mi?",
+      text: "",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Evet, sil!",
+      cancelButtonText: "İptal",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        deleteCustomer(customerId)
+          .then((response) => {
+            if (response.status !== "Error") {
+              dispatch({ type: "deleteCustomer", payload: customerId });
+              setDispatched(true);
+              Swal.fire(
+                "Silme işlemi tamamlandı.",
+                "",
+                "success"
+              );
+            } else {
+              Swal.fire("Hata!", response.message, "error");
             }
-          }).catch((error) => {
-            console.error("Request error:", error);
+          })
+          .catch((error) => {
+            console.error("Müşteri silme hatası:", error);
+            Swal.fire(
+              "Hata!",
+              "Müşteri silinirken bir hata oluştu.",
+              "error"
+            );
           });
-        };
-      })
-  };
-
-  const { customerId } = useParams();
-  const navigate = useNavigate(); // useHistory ekledim
-  const [customer, setCustomer] = useState(null);
-  const [updatedCustomerName, setUpdatedCustomerName] = useState('');
-  const [updatedCustomerSurname, setUpdatedCustomerSurname] = useState('');
-  const [updatedCustomerIdentityNumber, setUpdatedCustomerIdentityNumber] = useState('');
-  const [updatedCustomerPhoneNumber, setUpdatedCustomerPhoneNumber] = useState('');
-  const [updatedCustomerEmail, setUpdatedCustomerEmail] = useState('');
-  const [updatedCustomerRegistryDateLong, setUpdatedCustomerRegistryDateLong] = useState('');
-  const [updateMessage, setUpdateMessage] = useState('');
-
-  useEffect(() => {
-    getCustomerById(customerId)
-      .then((data) => {
-        if (data.status !== "Error") {
-          setCustomer(data?.data);
-          setUpdatedCustomerName(data?.data.customerName);
-          setUpdatedCustomerSurname(data?.data.customerSurname);
-          setUpdatedCustomerIdentityNumber(data?.data.customerIdentityNumber);
-          setUpdatedCustomerPhoneNumber(data?.data.customerPhoneNumber);
-          setUpdatedCustomerEmail(data?.data.customerEmail);
-          setUpdatedCustomerRegistryDateLong(data?.data.customerRegistryDateLong);
-        }
-      })
-      .catch((error) => {
-        console.error("Müşteri bilgilerini alma hatası:", error);
-      });
-  }, [customerId]);
-
-  const handleUpdate = async () => {
-    try {
-      await UpdateCustomer(
-        customerId,
-        updatedCustomerName,
-        updatedCustomerSurname,
-        updatedCustomerIdentityNumber,
-        updatedCustomerPhoneNumber,
-        updatedCustomerEmail,
-        updatedCustomerRegistryDateLong
-      );
-      setUpdateMessage('Müşteri bilgileri başarıyla güncellendi.');
-      // Güncelleme işlemi başarılı olduğunda, geçmişi yenile
-      navigate.goBack(); // history kullanarak geri git
-    } catch (error) {
-      console.error("Güncelleme başarısız:", error);
-      setUpdateMessage('Müşteri bilgileri güncellenirken bir hata oluştu.');
-    }
-  };
-
-  const ay = [];
-  for (let i = 1; i <= 12; i++) {
-    ay.push({
-      text: i.toString(),
-      value: i.toString()
+      }
     });
-  }
-
-  return (
+  };
   
+  
+  return (
+    <><Navbar />
 
-    <>
-      
-        <CssBaseline />
-        <Navbar />
+      <TableContainer style={{
+      width: "80%",
+      marginTop: "-11rem",
+      marginLeft: "20%", borderRadius:'1rem 1rem 0rem 0rem'}}>
         
-          <Container 
-          style={{
-            display:"flex",
-            justifyContent:"center",
-            width: "50%",
-            marginTop: "-10rem",
-            marginLeft: "32%",
-            background: "black",
-          boxShadow: "0px -1px 5px black",
-          color: "#e7c818",
-        }}>
-            <Box
-            style={{
+        
+        
+          
+          <Table sx={{ minWidth: 700, background:'#e7c818', border:'2px solid black',  }} aria-label="customized table">
+            {/* Her haber öğesi için bir kart oluştur */}
+            <TableHead>
+          <TableRow>
+            <StyledTableCell align="center">Geliştirilecek Bölge</StyledTableCell>
+            <StyledTableCell align="center">Hareket İsmi</StyledTableCell>
+            <StyledTableCell align="center">Set</StyledTableCell>
+            <StyledTableCell align="center">Sayı</StyledTableCell>
+            {/* <StyledTableCell align="center">Aidat Tutarı (₺)</StyledTableCell> */}
+            
+          
+            
+            <StyledTableCell align="center">İşlem</StyledTableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody >
+            {rows?.map((row) => (
+              
+              <StyledTableRow key={row.area}>
+                
+                  <StyledTableCell component="th" scope="row"
+                  align="center">
+             {row.area}
+              </StyledTableCell>
+                  
+              <StyledTableCell align="center">
+<PopupState variant="popover" popupId="demo-popup-menu">
+      {(popupState) => (
+        <React.Fragment>
+          <Button variant="contained" {...bindTrigger(popupState)}>
+            Dashboard
+          </Button>
+          <Menu {...bindMenu(popupState)}>
+            <MenuItem onClick={popupState.close}>Profile</MenuItem>
+            <MenuItem onClick={popupState.close}>My account</MenuItem>
+            <MenuItem onClick={popupState.close}>Logout</MenuItem>
+          </Menu>
+        </React.Fragment>
+      )}
+    </PopupState>
+              </StyledTableCell>
 
-              padding:'2rem',
-              width: "30rem",
-              background: "black",
-              border: "0.1px solid black",
-              color: "#e7c818",
-            }}>
-              <Typography  gutterBottom>
-              <div
-              style={{
-                border: "1px solid #e7c818",
-                boxShadow: "1px 1px 6px 5px #e7c818",
-              }}
-              className="text-center mt-4 mb-2"
-            >
-              <p className="h4"> Üyelik Güncelleme Formu </p>
-            </div>
-              </Typography>
-              {customer && (
-              <Formik
-                initialValues={{
-                  name: updateData ? updateData.customerName : "",
-                  surname: updateData ? updateData.customerSurname : "",
-                  name: updateData ? updateData.customerIdentityNumber : "",
-                  name: updateData ? updateData.customerPhoneNumber : "",
-                  name: updateData ? updateData.customerEmail : "",
-                  name: updateData ? updateData.customerRegistryDateLong : "",
-                }}
-                onSubmit={handleSubmit}
-              >
-                {(formikProps) => (
-                  <Form>
-                    <Field name="name">
-                      {({ field }) => (
-                        <CDBInput
-                          {...field}
-                          material
-                  hint="Name"
-                  type="text"
-                  style={{
-                    background: "black",
-                    color: "#e7c818",
-                    boxShadow: "0px -1px 5px #e7c818",
-                  }}
-                  placeholder="Ad"
-                          fullWidth
-                          required
-                          variant="outlined"
-                          sx={{ mb: 2 }}
-                          value={updatedCustomerName || customer.customerName} 
-              onChange={(e) => setUpdatedCustomerName(e.target.value)} 
-                        />
-                      )}
-                    </Field>
-                    <Field name="surname">
-                      {({ field }) => (
-                        <CDBInput
-                          {...field}
-                          fullWidth
-                          required
-                          variant="outlined"
-                          sx={{ mb: 2 }}
-                          material
-                          hint="Surname"
-                          type="text"
-                          style={{
-                            background: "black",
-                            color: "#e7c818",
-                            boxShadow: "0px -1px 5px #e7c818",
-                          }}
-                          placeholder="Soyad"
-                          value={updatedCustomerSurname || customer.customerSurname } 
-              onChange={(e) => setUpdatedCustomerSurname(e.target.value)} 
-                        />
-                      )}
-                    </Field>
-                    <Field name="identityNumber">
-                      {({ field }) => (
-                        <CDBInput
-                          {...field}
-                          fullWidth
-                          required
-                          multiline
-                          minRows={12}
-                          variant="outlined"
-                          sx={{ mb: 2 }}
-                          material
-              hint="KimlikNumarası"
-              type="text"
-              style={{
-                background: "black",
-                color: "#e7c818",
-                boxShadow: "0px -1px 5px #e7c818",
-              }}
-              placeholder="Kimlik Numarası"
-              value={updatedCustomerIdentityNumber || customer.customerIdentityNumber } 
-              onChange={(e) => setUpdatedCustomerIdentityNumber(e.target.value)} 
-                        />
-                      )}
-                    </Field>
-                    <Field name="phoneNumber">
-                      {({ field }) => (
-                        <CDBInput
-                          {...field}
-                          fullWidth
-                          required
-                          multiline
-                          minRows={12}
-                          variant="outlined"
-                          sx={{ mb: 2 }}
-                          material
-              hint="TelefonNumarası"
-              type="text"
-              style={{
-                background: "black",
-                color: "#e7c818",
-                boxShadow: "0px -1px 5px #e7c818",
-              }}
-              placeholder="Telefon Numarası"
-              value={updatedCustomerPhoneNumber || customer.customerPhoneNumber } 
-              onChange={(e) => setUpdatedCustomerPhoneNumber(e.target.value)} 
-                        />
-                      )}
-                    </Field>
-                    <Field name="email">
-                      {({ field }) => (
-                        <CDBInput
-                          {...field}
-                          fullWidth
-                          required
-                          multiline
-                          minRows={12}
-                          variant="outlined"
-                          sx={{ mb: 2 }}
-                          material
-              hint="Email"
-              type="text"
-              style={{
-                background: "black",
-                color: "#e7c818",
-                boxShadow: "0px -1px 5px #e7c818",
-              }}
-              placeholder="E-mail Adresi"
-              value={updatedCustomerEmail || customer.customerEmail } 
-              onChange={(e) => setUpdatedCustomerEmail(e.target.value)} 
-                        />
-                      )}
-                    </Field>
-                    <Field name="registryDateLong">
-                      {({ field }) => (
-                        
-                        <CDBSelect selected="Üyelik Süresi (Ay)"
-                        options={ay}
-                          {...field}
-                          fullWidth
-                          required
-                          multiline
-                          minRows={12}
-                          variant="outlined"
-                          sx={{mb: 2 }}
-                          material
-              hint="Kayıt Tarihi"
-              type="select"
-              style={{
-                background: "black",
-                color: "#e7c818",
-                boxShadow: "0px -1px 5px #e7c818",
-                marginTop:"1rem",
-                width:"100%",
-                
-              }}
-              placeholder="Üyelik Süresi (Ay)"
-              value={updatedCustomerRegistryDateLong || customer.customerRegistryDateLong } 
-              onChange={(e) => setUpdatedCustomerRegistryDateLong(e.target.value)} 
-              />   
-                        
-                      )}
-                    </Field>
-                    <CDBBtn type="submit" variant="contained" color="dark"
-                     className="btn-block my-3 mx-0" onClick={handleUpdate}>
-                      
-                      Güncelle
-            </CDBBtn>
+              <StyledTableCell align="center">{row.customerEmail}</StyledTableCell>
+
+              <StyledTableCell align="center">{row.customerIdentityNumber}</StyledTableCell>
+
+
+              <StyledTableCell align="center" color="black">
+              <CDBBtn style={{marginTop:"0.3em"}}
+         size="medium"
+         color="dark" 
+         
+            >                Program Düzenle
+              </CDBBtn>
+              </StyledTableCell>
+
+              
+
+              {/* <StyledTableCell align="center">{newsItem.customerRegistryDateLong}</StyledTableCell> */}
                     
-                  </Form>
-               )}
-                
-              </Formik>
-              )}
-            </Box>
-          </Container>
+                  
+                  
+                  
+  
+ 
     
+      <StyledTableRow container spacing={1} alignItems="center">
+        <TableRow align="center">
+          
+        
+          
+          <CDBBtn style={{marginTop:"0.2em"}}
+         
+          size="medium"
+          
+            color="danger"  
+            onClick={() => {
+              handleDeleteClick(row.customerId);
+            }}
+            
+          >
+            Sil
+          </CDBBtn>
+          </TableRow>
+          
+      </StyledTableRow>
+  
+  
+  
+  
+              </StyledTableRow> 
+            ))} 
+            </TableBody>
+          </Table>
+      </TableContainer>
       
     </>
   );
 };
-
-export default CustomerUpdate;
+export default CustomerProgram;

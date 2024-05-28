@@ -129,7 +129,6 @@ const Customers = () => {
   //   });
   // };
   const handleDeleteClick = async (customerId) => {
-    // Silme işleminden önce kullanıcıya bir onay mesajı göster
     Swal.fire({
       title: "Üye silinsin mi?",
       text: "",
@@ -141,11 +140,9 @@ const Customers = () => {
       cancelButtonText: "İptal",
     }).then((result) => {
       if (result.isConfirmed) {
-        // Kullanıcı onayladıysa silme işlemi gerçekleştir
         deleteCustomer(customerId)
           .then((response) => {
             if (response.status !== "Error") {
-              // Silme işlemi başarılı olduysa state'i güncelle
               dispatch({ type: "deleteCustomer", payload: customerId });
               setDispatched(true);
               Swal.fire(
