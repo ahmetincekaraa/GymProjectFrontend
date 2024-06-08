@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from 'react-router-dom'; // useHistory ekledim
+import { useParams, useNavigate } from 'react-router-dom';
 import { getCustomerById, UpdateCustomer } from '../../api/axios';
 import Navbar from "../nav/Navbar";
 import {
@@ -19,7 +19,7 @@ import Swal from "sweetalert2";
 
 const CustomerUpdate = () => {
   const dispatch = useDispatch();
-  const [updateData, setUpdateData] = useState(true); // useState ekledim
+  const [updateData, setUpdateData] = useState(true);
 
   const handleSubmit = (values) => {
     console.log("Veriler:", values);
@@ -54,7 +54,7 @@ const CustomerUpdate = () => {
   };
 
   const { customerId } = useParams();
-  const navigate = useNavigate(); // useHistory ekledim
+  const navigate = useNavigate();
   const [customer, setCustomer] = useState(null);
   const [updatedCustomerName, setUpdatedCustomerName] = useState('');
   const [updatedCustomerSurname, setUpdatedCustomerSurname] = useState('');
@@ -94,7 +94,6 @@ const CustomerUpdate = () => {
         updatedCustomerRegistryDateLong
       );
       setUpdateMessage('Müşteri bilgileri başarıyla güncellendi.');
-      // Başarı durumunda kullanıcıya bildirim gösterilir
       Swal.fire({
         position: "center",
         icon: "success",
@@ -105,7 +104,6 @@ const CustomerUpdate = () => {
     } catch (error) {
       console.error("Güncelleme başarısız:", error);
       setUpdateMessage('Müşteri bilgileri güncellenirken bir hata oluştu.');
-      // Hata durumunda kullanıcıya bildirim gösterilir
       Swal.fire({
         position: "center",
         icon: "error",

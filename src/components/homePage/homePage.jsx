@@ -1,5 +1,5 @@
 import React from "react";
-import Header from "../header/Header";     // MainMenu adında sayfa yapılacak..
+import Header from "../header/Header";
 import Navbar from "../nav/Navbar";
 import { Routes, Route } from "react-router-dom";
 import Kayit from '../kayit/Kayit'

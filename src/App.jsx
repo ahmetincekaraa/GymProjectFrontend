@@ -1,5 +1,5 @@
 import React from "react";
-import Header from './components/header/Header'      // MainMenu adında sayfa yapılacak..
+import Header from './components/header/Header'     
 // import Navbar from "./components/nav/Navbar";
 import "./App.css";
 import { useSelector } from 'react-redux';
@@ -21,12 +21,11 @@ const App = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    // Sayfa yüklendiğinde local storage'dan oturum bilgilerini kontrol et
     const userData = JSON.parse(localStorage.getItem('userData'));
     if (userData) {
-      dispatch(loginSuccess(userData)); // Oturum bilgilerini Redux store'a gönder
+      dispatch(loginSuccess(userData));
     } else {
-      dispatch(logout()); // Oturum bilgileri yoksa kullanıcıyı çıkış yapmış olarak kabul et
+      dispatch(logout());
     }
   }, [dispatch]);
   

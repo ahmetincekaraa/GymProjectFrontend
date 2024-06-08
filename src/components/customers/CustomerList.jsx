@@ -66,11 +66,9 @@ const Customers = () => {
 
   const [customer, setCustomer] = useState();
   useEffect(() => {
-    // getAllNews fonksiyonunu çağırarak haberleri al
     getAllCustomers()
       .then((data) => {
         if (data.status !== "Error") {
-          // Haberler verisi geldiğinde state'i güncelle
           setCustomerList(data?.data);
         }
       })
@@ -80,20 +78,7 @@ const Customers = () => {
       setDispatched(false);
   }, [dispatched]);
 
-  useEffect(() => {
-    if (dispatched) {
-      // Yeniden listeleme işlemi burada gerçekleşecek
-      getAllCustomers()
-        .then((data) => {
-          if (data.status !== "Error") {
-            setCustomerList(data?.data);
-          }
-        })
-        .catch((error) => {
-          console.error("Üyelerin listelenme hatası:", error);
-        });
-    }
-  }, [dispatched]);
+  
 
   useEffect(() => {
     if(dispatched && updateData){
@@ -105,11 +90,11 @@ const Customers = () => {
 
 
   const handleUpdateClick = (customerId) => {
-    navigate(`/customer-update/${customerId}`); // Düzenleme sayfasına yönlendirme
+    navigate(`/customer-update/${customerId}`)
   };
 
   const handleUpdateClick2 = (customerId) => {
-    navigate(`/customer-program/${customerId}`); // Düzenleme sayfasına yönlendirme
+    navigate(`/customer-program/${customerId}`);
   };
   
 
@@ -178,7 +163,6 @@ const Customers = () => {
         
           
           <Table sx={{ minWidth: 700, background:'#e7c818', border:'2px solid black',  }} aria-label="customized table">
-            {/* Her haber öğesi için bir kart oluştur */}
             <TableHead>
           <TableRow>
             <StyledTableCell align="center">Ad Soyad</StyledTableCell>

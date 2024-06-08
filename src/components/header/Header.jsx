@@ -35,8 +35,8 @@ function Header() {
 
   const handleLogout = () => {
     dispatch(logout());
-    navigate('/'); // Ana sayfaya yönlendir
-    handleCloseUserMenu(); // Menüyü kapat
+    navigate('/');
+    handleCloseUserMenu();
   };
 
   return (
@@ -63,7 +63,6 @@ function Header() {
                   display: { xs: 'block', md: 'none' }
                 }}
               >
-                {/* Menü öğeleri */}
               </Menu>
             </Box>
             <Typography

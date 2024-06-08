@@ -28,7 +28,6 @@ const Kayit = () => {
   var updateData = false;
 
   const handleSubmit = (values) => {
-    // Bu kısımda form verilerinin bir API'ye gönderilmesi veya başka bir işlem yapılabilir
     console.log("Form verileri:", values);
     const customerId = updateData ? updateData.customerId : "";
 

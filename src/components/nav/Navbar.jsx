@@ -8,7 +8,6 @@ import {
   CDBSidebarMenuItem,
   CDBSidebarFooter,
 } from "cdbreact";
-// import Program from '../program/Program.jsx';
 import CustomerList from '../customers/CustomerList';
 import Program from '../customerProgram/CustomerProgram'
 import Kayit from '../kayit/Kayit'

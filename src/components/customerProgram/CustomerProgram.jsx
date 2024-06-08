@@ -48,7 +48,6 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   '&:nth-of-type(odd)': {
     backgroundColor: theme.palette.action.hover,
   },
-  // hide last border
   '&:last-child td, &:last-child th': {
     border: 0,
   },
@@ -126,7 +125,6 @@ const CustomerProgram = () => {
         
           
           <Table sx={{ minWidth: 700, background:'#e7c818', border:'2px solid black',  }} aria-label="customized table">
-            {/* Her haber öğesi için bir kart oluştur */}
             <TableHead>
           <TableRow>
             <StyledTableCell align="center">Geliştirilecek Bölge</StyledTableCell>

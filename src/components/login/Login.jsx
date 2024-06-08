@@ -23,12 +23,6 @@ import { useNavigate } from 'react-router-dom';
 import { alignProperty } from "@mui/material/styles/cssUtils";
 
 
-
-
-
-
-// TODO remove, this demo shouldn't need to reset the theme.
-
 const defaultTheme = createTheme();
 
 
@@ -41,7 +35,6 @@ const Forms = () => {
   const [password, setPassword] = useState('');
   if (loggedInUser) {
     const { username, passwordLocal } = JSON.parse(loggedInUser);
-    // Oturum bilgilerini kullanarak oturumu doğrula
     if(email == '' && password === ''){
       setEmail(username)
       setPassword(passwordLocal)
@@ -87,8 +80,7 @@ const Forms = () => {
               icon: "success",
               title: "Giriş Başarılı",
               showConfirmButton: true,
-            }).then((result) => {
-                /* Read more about isConfirmed, isDenied below */           
+            }).then((result) => {      
                 if (result.isConfirmed) {
                  
                
