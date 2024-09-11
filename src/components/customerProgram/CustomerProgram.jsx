@@ -149,37 +149,12 @@ const CustomerProgram = () => {
               </StyledTableCell>
                   
               <StyledTableCell align="center">
-<PopupState variant="popover" popupId="demo-popup-menu">
-      {(popupState) => (
-        <React.Fragment>
-          <Button variant="contained" {...bindTrigger(popupState)}>
-            Dashboard
-          </Button>
-          <Menu {...bindMenu(popupState)}>
-            <MenuItem onClick={popupState.close}>Profile</MenuItem>
-            <MenuItem onClick={popupState.close}>My account</MenuItem>
-            <MenuItem onClick={popupState.close}>Logout</MenuItem>
-          </Menu>
-        </React.Fragment>
-      )}
-    </PopupState>
+
               </StyledTableCell>
 
               <StyledTableCell align="center">{row.customerEmail}</StyledTableCell>
 
               <StyledTableCell align="center">{row.customerIdentityNumber}</StyledTableCell>
-
-
-              <StyledTableCell align="center" color="black">
-              <CDBBtn style={{marginTop:"0.3em"}}
-         size="medium"
-         color="dark" 
-         
-            >                Program Düzenle
-              </CDBBtn>
-              </StyledTableCell>
-
-              
 
               {/* <StyledTableCell align="center">{newsItem.customerRegistryDateLong}</StyledTableCell> */}
                     
